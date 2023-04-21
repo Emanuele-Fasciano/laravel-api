@@ -1,0 +1,17 @@
+@import '~bootstrap/scss/bootstrap';
+
+.action-icon{
+    text-decoration: none;
+}
+
+img{
+    max-width: 300px;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+a{
+    text-decoration: none;
+}
