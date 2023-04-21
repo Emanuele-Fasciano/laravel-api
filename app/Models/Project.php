@@ -11,6 +11,9 @@ class Project extends Model
 
     protected $fillable = ["name", "programming_languages_used", "start_date", "end_date", "description", "type_id", "technologies"];
 
+    // EAGER LOADING appesantisce la richiesta, da utilizzare solo se TUTTE le volte vogliamo queste informazioni
+    // protected $with = ['type', 'technologies'];
+
     // creo una funzione per recuperare il path dell'immagine correttamente 
     public function getImageUri()
     {

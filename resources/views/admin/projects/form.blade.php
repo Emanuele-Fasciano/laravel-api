@@ -4,16 +4,7 @@
 
 @section('content')
     <a class="btn btn-primary my-4" href="{{ route('admin.projects.index') }}">Torna alla lista</a>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <h4>Correggi i seguenti errori per proseguire: </h4>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+
     @if ($project->id)
         <form action="{{ route('admin.projects.update', $project) }}" method="POST" enctype="multipart/form-data">
             @method('PUT')
@@ -55,14 +46,29 @@
         </div>
 
         <div class="col-10">
-            <label for="technology_id" class="form-label me-3 @error('technology_id') is-invalid @enderror">Tecnologie
-                utilizzate:</label> <br>
-            @foreach ($technologies as $technology)
-                <input type="checkbox" name="technology[]" id="technology{{ $technology->id }}"
-                    value="{{ $technology->id }}" class="form-check-control"
-                    @if (in_array($technology->id, old('technology', $project_technology ?? []))) checked @endif>
-                <label for="technology{{ $technology->id }}">{{ $technology->name }}</label> <br>
-            @endforeach
+            <div class="row">
+                <div class="col-6">
+                    <label for="technology_id"
+                        class="form-label me-3 @error('technology_id') is-invalid @enderror">Tecnologie
+                        utilizzate:</label> <br>
+                    @foreach ($technologies as $technology)
+                        <input type="checkbox" name="technology[]" id="technology{{ $technology->id }}"
+                            value="{{ $technology->id }}" class="form-check-control"
+                            @if (in_array($technology->id, old('technologies', $project_technologies ?? []))) checked @endif>
+                        <label for="technology{{ $technology->id }}">{{ $technology->name }}</label> <br>
+                    @endforeach
+                </div>
+                {{-- <div class="col-4">
+                    <label for="is_published" class="form-label">Pubblicato</label>
+                    <input type="checkbox" name="is_published" id="is_published"
+                        class="form-check-control @error('is_published') is-invalid @enderror" @checked(old('is_published', $project->is_published))>
+                    @error('is_published')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div> --}}
+            </div>
 
         </div>
         <label for="description" class="form-label mt-4 @error('description') is-invalid @enderror">Descrizione</label>

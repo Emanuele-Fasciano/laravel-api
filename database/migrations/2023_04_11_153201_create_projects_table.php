@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
+            // $table->boolean('is_published')->default(0);
             $table->date('start_date');
             $table->date('end_date');
             $table->text('image')->nullable();

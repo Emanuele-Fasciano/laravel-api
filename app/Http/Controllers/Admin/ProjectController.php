@@ -95,7 +95,9 @@ class ProjectController extends Controller
     {
         $types = Type::all();
         $technologies = Technology::orderBy('name')->get();
-        return view('admin.projects.form', compact('project', 'types', 'technologies'));
+        // recupero l'id da inviare al form per il "checked" nel form dell'edit
+        $project_technologies = $project->technologies->pluck('id')->toArray();
+        return view('admin.projects.form', compact('project', 'types', 'technologies', 'project_technologies'));
     }
 
     /**
