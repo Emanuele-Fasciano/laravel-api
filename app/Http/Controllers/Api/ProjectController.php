@@ -20,7 +20,15 @@ class ProjectController extends Controller
 
             // uso il 'with' per recuperare l'informazione del type e delle technologies da stampare
             ->with('type', 'technologies')
-            ->get();
+            ->paginate(9);
+        // ->get();
+
+        foreach ($projects as $project) {
+            if ($project->image)
+                $project->image = url('storage/' . $project->image);
+            else
+                $project->image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
+        }
 
         // ritorno un file json
         return response()->json($projects);
