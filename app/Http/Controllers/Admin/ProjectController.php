@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Technology;
 use App\Models\Type;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -21,9 +22,16 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+        // ordinamento ascendente e discndente della pagina
         $sort = (!empty($sort_request = $request->get('sort'))) ? $sort_request : "updated_at";
         $order = (!empty($order_request = $request->get('order'))) ? $order_request : "DESC";
         $projects = Project::orderBy($sort, $order)->paginate(10)->withQueryString();
+
+        // cambio il formato della data
+        foreach ($projects as $project) {
+            $project->start_date = \Carbon\Carbon::parse($project->start_date)->format('d/m/Y');
+            $project->end_date = \Carbon\Carbon::parse($project->end_date)->format('d/m/Y');
+        }
 
         return view('admin.projects.index', compact('projects', 'sort', 'order'));
 
@@ -68,9 +76,10 @@ class ProjectController extends Controller
 
         // prima di salvare il project assegno a  $project->image il valore di $path per visualizzare l'immagine
         $project->image = $path;
+
         $project->save();
 
-        if (Arr::exists($data, "technologies")) $project->technologies()->attach($data["technologies"]);
+        if (Arr::exists($data, "technology")) $project->technologies()->attach($data["technology"]);
         return to_route('admin.projects.show', $project);
     }
 
@@ -82,6 +91,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project->start_date = \Carbon\Carbon::parse($project->start_date)->format('d/m/Y');
+        $project->end_date = \Carbon\Carbon::parse($project->end_date)->format('d/m/Y');
+
         return view('admin.projects.show', compact('project'));
     }
 
