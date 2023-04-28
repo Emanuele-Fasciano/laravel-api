@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PublishedProjectMail;
 use App\Models\Project;
 use App\Models\Technology;
 use App\Models\Type;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -78,6 +81,15 @@ class ProjectController extends Controller
         $project->image = $path;
 
         $project->save();
+
+        // istanzio una nuova mail (importo PublishedProjectMail) e le passo $project per poter stampare i valori nella mail
+        $mail = new PublishedProjectMail($project);
+
+        // recupero la mail dell'utente loggato
+        $user_email = Auth::user()->email;
+
+        // importo Mail e invio la mail all utente loggato
+        Mail::to($user_email)->send($mail);
 
         if (Arr::exists($data, "technology")) $project->technologies()->attach($data["technology"]);
         return to_route('admin.projects.show', $project);
